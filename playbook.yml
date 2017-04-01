@@ -22,7 +22,6 @@
       when: os_distribution == "CentOS"
     - debug:
         msg: "{{ansible_all_ipv4_addresses}}"
-        with_items: value
 
     - selinux:
       state: disabled
@@ -45,3 +44,14 @@
           - flanneld
         state: started
         enabled: yes
+     
+    - lineinfile: 
+        dest: '/etc/kubernetes/config'
+        regexp: '^KUBE_MASTER'
+        line: "KUBE_MASTER=--http://{{ master_node }}:8080"       
+        
+        
+             
+    
+       
+     
