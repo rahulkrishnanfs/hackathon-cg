@@ -22,8 +22,13 @@
      
     - debug:
         msg: "{{ansible_all_ipv4_addresses}}"
-        with_items: value
-    
+     
+    - lineinfile: 
+        dest: '/etc/kubernetes/config'
+        regexp: '^KUBE_MASTER'
+        line: "KUBE_MASTER=--http://{{ master_node }}:8080"       
+        
+        
              
     
        
