@@ -1,20 +1,47 @@
 ---
 - hosts: aws 
-  remote_user: kube
+  remote_user: ec2-user
+  sudo: yes
   tasks:
     - name: Adding the repo_file
       yum_repository:
-           name: Docker repository
+           name: kubernetes
            description: Installing the docker packages
            file: docker-common-release
            baseurl: http://cbs.centos.org/repos/virt7-docker-common-release/x86_64/os/
            gpgcheck: no
            enabled: yes
-      when: os_distribution == "CentOS"
+  
     - name: Installing the kubernetes packages on all nodes 
-      yum: name={{item}} state=installed update_cache=yes
+      yum: name={{ item }} state=latest 
       with_items:
+        - systemd
         - kubernetes
         - etcd
         - flannel
       when: os_distribution == "CentOS"
+    - debug:
+        msg: "{{ansible_all_ipv4_addresses}}"
+        with_items: value
+
+    - selinux:
+      state: disabled
+    - name: stop Firewall service if running and Disable in starting
+      systemd: 
+        name: firewalld
+        state: stopped
+        enabled: no
+
+# Starting services
+
+    - name: Start etcd, API Server, Controller, Scheduler, Flannel
+      systemd:
+        name: {{ items }}
+        with_items: 
+          - etcd
+          - kube-apiserver
+          - kube-controller-manager
+          - kube-scheduler
+          - flanneld
+        state: started
+        enabled: yes

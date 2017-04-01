@@ -1,9 +1,9 @@
 [aws-master]
-ubuntu_master ansible_ssh_host=35.154.166.186
+ubuntu_master ansible_ssh_host=35.154.227.223
 
 [aws-minion]
-ubuntu_minion_1 ansible_ssh_host=35.154.224.192
-ubuntu_minion_2 ansible_ssh_host=35.154.229.144
+ubuntu_minion_1 ansible_ssh_host=35.154.229.221
+ubuntu_minion_2 ansible_ssh_host=35.154.238.77
 
 
 [aws:children]
@@ -11,6 +11,6 @@ aws-master
 aws-minion
 
 [aws:vars]
-ansible_ssh_private_key_file=./key  
+ansible_ssh_private_key_file=./key.pem  
 
 
